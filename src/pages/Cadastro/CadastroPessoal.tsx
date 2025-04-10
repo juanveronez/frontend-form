@@ -9,11 +9,20 @@ interface FormData {
   confirmedPassword: string;
 }
 
+const phonePattern = /^\(\d{2,3}\) \d{5}-\d{4}$/;
+const emailPattern = /^[^\s@]+@alura\.com\.br$/;
+const passwordPattern =
+  /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
 const CadastroPessoal = () => {
   const { register, handleSubmit } = useForm<FormData>();
 
   const handleValid = (data: FormData) => {
     console.log(data);
+  };
+
+  const confirmPassword = (confirmPassword: string, { password }: FormData) => {
+    return confirmPassword === password;
   };
 
   return (
@@ -35,7 +44,7 @@ const CadastroPessoal = () => {
             id="campo-email"
             placeholder="Insira seu endereço de email"
             type="email"
-            {...register("email")}
+            {...register("email", { required: true, pattern: emailPattern })}
           />
         </Fieldset>
 
@@ -47,7 +56,7 @@ const CadastroPessoal = () => {
             placeholder="Ex: (DDD) XXXXX-XXXX"
             {...register("phone", {
               required: true,
-              pattern: /^\(\d{2,3}\) \d{5}-\d{4}$/,
+              pattern: phonePattern,
             })}
           />
         </Fieldset>
@@ -58,7 +67,10 @@ const CadastroPessoal = () => {
             id="campo-senha"
             placeholder="Crie uma senha"
             type="password"
-            {...register("password")}
+            {...register("password", {
+              required: true,
+              pattern: passwordPattern,
+            })}
           />
         </Fieldset>
         <Fieldset>
@@ -67,7 +79,7 @@ const CadastroPessoal = () => {
             id="campo-senha-confirmacao"
             placeholder="Repita a senha anterior"
             type="password"
-            {...register("confirmedPassword")}
+            {...register("confirmedPassword", { validate: confirmPassword })}
           />
         </Fieldset>
         <Button type="submit">Avançar</Button>
