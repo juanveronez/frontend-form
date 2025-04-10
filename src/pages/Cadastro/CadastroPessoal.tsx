@@ -1,20 +1,32 @@
 import { useForm } from "react-hook-form";
 import { Button, Label, Fieldset, Input, Form, Titulo } from "../../components";
 
+interface FormData {
+  name: string;
+  email: string;
+  phone: string;
+  password: string;
+  confirmedPassword: string;
+}
+
 const CadastroPessoal = () => {
-  const { register } = useForm();
+  const { register, handleSubmit } = useForm<FormData>();
+
+  const handleValid = (data: FormData) => {
+    console.log(data);
+  };
 
   return (
     <>
       <Titulo>Insira alguns dados básicos:</Titulo>
-      <Form>
+      <Form onSubmit={handleSubmit(handleValid)}>
         <Fieldset>
           <Label htmlFor="campo-nome">Nome</Label>
           <Input
             id="campo-nome"
             placeholder="Digite seu nome completo"
             type="text"
-            {...register("nome")}
+            {...register("name")}
           />
         </Fieldset>
         <Fieldset>
@@ -33,7 +45,7 @@ const CadastroPessoal = () => {
             id="campo-telefone"
             type="text"
             placeholder="Ex: (DDD) XXXXX-XXXX"
-            {...register("telefone")}
+            {...register("phone")}
           />
         </Fieldset>
 
@@ -43,7 +55,7 @@ const CadastroPessoal = () => {
             id="campo-senha"
             placeholder="Crie uma senha"
             type="password"
-            {...register("senha")}
+            {...register("password")}
           />
         </Fieldset>
         <Fieldset>
@@ -52,7 +64,7 @@ const CadastroPessoal = () => {
             id="campo-senha-confirmacao"
             placeholder="Repita a senha anterior"
             type="password"
-            {...register("senhaVerificada")}
+            {...register("confirmedPassword")}
           />
         </Fieldset>
         <Button type="submit">Avançar</Button>
