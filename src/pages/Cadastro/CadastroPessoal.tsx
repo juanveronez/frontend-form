@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import {
   Button,
   Label,
@@ -8,6 +8,7 @@ import {
   Titulo,
   ErrorMessage,
 } from "../../components";
+import InputMask from "../../components/InputMask";
 
 interface FormData {
   name: string;
@@ -29,6 +30,7 @@ const confirmPassword = (confirmPassword: string, { password }: FormData) => {
 const CadastroPessoal = () => {
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>();
@@ -81,18 +83,27 @@ const CadastroPessoal = () => {
 
         <Fieldset>
           <Label>Telefone</Label>
-          <Input
-            id="campo-telefone"
-            type="text"
-            placeholder="Ex: (DDD) XXXXX-XXXX"
-            $error={!!errors.phone}
-            {...register("phone", {
+          <Controller
+            control={control}
+            name="phone"
+            rules={{
               required: "Campo de telefone é obrigatório",
               pattern: {
                 value: phonePattern,
                 message: "O formato de telefone está incorreto",
               },
-            })}
+            }}
+            render={({ field }) => (
+              <InputMask
+                mask="(99) 99999-9999"
+                id="campo-telefone"
+                type="text"
+                placeholder="Ex: (DDD) XXXXX-XXXX"
+                $error={!!errors.phone}
+                value={field.value ?? ""}
+                onChange={field.onChange}
+              />
+            )}
           />
           {errors.phone && <ErrorMessage>{errors.phone.message}</ErrorMessage>}
         </Fieldset>

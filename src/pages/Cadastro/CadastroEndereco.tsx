@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import {
   Button,
   ErrorMessage,
@@ -9,6 +9,7 @@ import {
   Label,
   Titulo,
 } from "../../components";
+import InputMask from "../../components/InputMask";
 
 interface AddressResponse {
   cep: string;
@@ -32,16 +33,19 @@ const numberPattern = /^\d+$/;
 
 const CadastroEndereco = () => {
   const {
+    control,
     register,
     handleSubmit,
     setError,
     setValue,
     watch,
+    reset,
     formState: { errors },
   } = useForm<FormData>();
 
   const handleValid = (data: FormData) => {
     console.log(data);
+    reset();
   };
 
   const fetchAddress = async (code: string) => {
@@ -74,19 +78,28 @@ const CadastroEndereco = () => {
       <Form onSubmit={handleSubmit(handleValid)}>
         <Fieldset>
           <Label htmlFor="campo-cep">CEP</Label>
-          <Input
-            id="campo-cep"
-            placeholder="Insira seu CEP"
-            type="text"
-            $error={!!errors.code}
-            {...register("code", {
+          <Controller
+            control={control}
+            name="code"
+            rules={{
               required: "Campo obrigatório",
               pattern: {
                 value: codePattern,
                 message: "Formato de CEP inválido",
               },
-              onBlur: () => fetchAddress(codeValue),
-            })}
+            }}
+            render={({ field }) => (
+              <InputMask
+                mask="99999-999"
+                id="campo-cep"
+                placeholder="Insira seu CEP"
+                type="text"
+                $error={!!errors.code}
+                value={field.value ?? ""}
+                onChange={field.onChange}
+                onBlur={() => fetchAddress(codeValue)}
+              />
+            )}
           />
           {errors.code && <ErrorMessage>{errors.code.message}</ErrorMessage>}
         </Fieldset>
