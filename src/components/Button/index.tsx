@@ -11,6 +11,12 @@ const Button = styled.button`
   line-height: 19px;
   width: 50%;
   cursor: pointer;
+
+  transition: background-color 0.25s ease-in-out;
+
+  &:disabled {
+    background-color: var(--cinza);
+  }
 `;
 
 export default Button;
