@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import {
   Button,
+  ErrorMessage,
   Fieldset,
   Form,
   FormContainer,
@@ -26,31 +27,44 @@ interface FormData {
   location: string;
 }
 
+const codePattern = /^\d{5}-\d{3}$/;
+const numberPattern = /^\d+$/;
+
 const CadastroEndereco = () => {
-  const { register, handleSubmit, setError, setValue, watch } =
-    useForm<FormData>();
+  const {
+    register,
+    handleSubmit,
+    setError,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm<FormData>();
 
   const handleValid = (data: FormData) => {
     console.log(data);
   };
 
   const fetchAddress = async (code: string) => {
+    if (!code || !codePattern.test(code)) return;
     try {
-      if (!code) throw new Error();
-
-      const res = await fetch(`http://viacep.com.br/ws/${code}/json/`);
-
+      const res = await fetch(
+        `http://viacep.com.br/ws/${code.replace("-", "")}/json/`
+      );
       if (!res.ok) throw new Error();
 
       const data: AddressResponse = await res.json();
 
-      setValue("street", data.logradouro);
-      setValue("location", `${data.localidade}, ${data.uf}`);
-      setValue("neighborhood", data.bairro);
+      setValue("street", data.logradouro, { shouldValidate: true });
+      setValue("location", `${data.localidade}, ${data.uf}`, {
+        shouldValidate: true,
+      });
+      setValue("neighborhood", data.bairro, { shouldValidate: true });
     } catch (e) {
       setError("code", { type: "deps", message: "CEP inválido" });
     }
   };
+
+  const hasErrors = !!Object.keys(errors).length;
 
   const codeValue = watch("code");
 
@@ -64,11 +78,17 @@ const CadastroEndereco = () => {
             id="campo-cep"
             placeholder="Insira seu CEP"
             type="text"
+            $error={!!errors.code}
             {...register("code", {
               required: "Campo obrigatório",
+              pattern: {
+                value: codePattern,
+                message: "Formato de CEP inválido",
+              },
               onBlur: () => fetchAddress(codeValue),
             })}
           />
+          {errors.code && <ErrorMessage>{errors.code.message}</ErrorMessage>}
         </Fieldset>
         <Fieldset>
           <Label htmlFor="campo-rua">Rua</Label>
@@ -76,8 +96,12 @@ const CadastroEndereco = () => {
             id="campo-rua"
             placeholder="Rua Agarikov"
             type="text"
+            $error={!!errors.street}
             {...register("street", { required: "Campo obrigatório" })}
           />
+          {errors.street && (
+            <ErrorMessage>{errors.street.message}</ErrorMessage>
+          )}
         </Fieldset>
 
         <FormContainer>
@@ -87,8 +111,18 @@ const CadastroEndereco = () => {
               id="campo-numero-rua"
               placeholder="Ex: 1440"
               type="text"
-              {...register("number", { required: "Campo obrigatório" })}
+              $error={!!errors.number}
+              {...register("number", {
+                required: "Campo obrigatório",
+                pattern: {
+                  value: numberPattern,
+                  message: "O campo deve ser numérico",
+                },
+              })}
             />
+            {errors.number && (
+              <ErrorMessage>{errors.number.message}</ErrorMessage>
+            )}
           </Fieldset>
           <Fieldset>
             <Label htmlFor="campo-bairro">Bairro</Label>
@@ -96,8 +130,12 @@ const CadastroEndereco = () => {
               id="campo-bairro"
               placeholder="Vila Mariana"
               type="text"
+              $error={!!errors.neighborhood}
               {...register("neighborhood", { required: "Campo obrigatório" })}
             />
+            {errors.neighborhood && (
+              <ErrorMessage>{errors.neighborhood.message}</ErrorMessage>
+            )}
           </Fieldset>
         </FormContainer>
         <Fieldset>
@@ -106,10 +144,16 @@ const CadastroEndereco = () => {
             id="campo-localidade"
             placeholder="São Paulo, SP"
             type="text"
+            $error={!!errors.location}
             {...register("location", { required: "Campo obrigatório" })}
           />
+          {errors.location && (
+            <ErrorMessage>{errors.location.message}</ErrorMessage>
+          )}
         </Fieldset>
-        <Button type="submit">Cadastrar</Button>
+        <Button disabled={hasErrors} type="submit">
+          Cadastrar
+        </Button>
       </Form>
     </>
   );
