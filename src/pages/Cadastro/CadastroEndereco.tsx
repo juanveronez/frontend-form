@@ -10,6 +10,7 @@ import {
   Titulo,
 } from "../../components";
 import InputMask from "../../components/InputMask";
+import { useEffect } from "react";
 
 interface AddressResponse {
   cep: string;
@@ -40,12 +41,17 @@ const CadastroEndereco = () => {
     setValue,
     watch,
     reset,
-    formState: { errors },
-  } = useForm<FormData>();
+    formState: { errors, isSubmitSuccessful },
+  } = useForm<FormData>({
+    mode: "onBlur",
+  });
+
+  useEffect(() => {
+    if (isSubmitSuccessful) reset();
+  }, [reset, isSubmitSuccessful]);
 
   const handleValid = (data: FormData) => {
     console.log(data);
-    reset();
   };
 
   const fetchAddress = async (code: string) => {
@@ -81,6 +87,7 @@ const CadastroEndereco = () => {
           <Controller
             control={control}
             name="code"
+            defaultValue=""
             rules={{
               required: "Campo obrigatório",
               pattern: {
@@ -95,7 +102,7 @@ const CadastroEndereco = () => {
                 placeholder="Insira seu CEP"
                 type="text"
                 $error={!!errors.code}
-                value={field.value ?? ""}
+                value={field.value}
                 onChange={field.onChange}
                 onBlur={() => fetchAddress(codeValue)}
               />

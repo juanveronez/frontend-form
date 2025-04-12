@@ -9,6 +9,7 @@ import {
   ErrorMessage,
 } from "../../components";
 import InputMask from "../../components/InputMask";
+import { useEffect } from "react";
 
 interface FormData {
   name: string;
@@ -32,10 +33,17 @@ const CadastroPessoal = () => {
     register,
     control,
     handleSubmit,
-    formState: { errors },
-  } = useForm<FormData>();
+    formState: { errors, isSubmitSuccessful },
+    reset,
+  } = useForm<FormData>({
+    mode: "onBlur",
+  });
 
   const hasErrors = !!Object.keys(errors).length;
+
+  useEffect(() => {
+    if (isSubmitSuccessful) reset();
+  }, [reset, isSubmitSuccessful]);
 
   const handleValid = (data: FormData) => {
     console.log(data);
@@ -86,6 +94,7 @@ const CadastroPessoal = () => {
           <Controller
             control={control}
             name="phone"
+            defaultValue=""
             rules={{
               required: "Campo de telefone é obrigatório",
               pattern: {
@@ -100,7 +109,7 @@ const CadastroPessoal = () => {
                 type="text"
                 placeholder="Ex: (DDD) XXXXX-XXXX"
                 $error={!!errors.phone}
-                value={field.value ?? ""}
+                value={field.value}
                 onChange={field.onChange}
               />
             )}
