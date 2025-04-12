@@ -109,8 +109,7 @@ const CadastroPessoal = () => {
                 type="text"
                 placeholder="Ex: (DDD) XXXXX-XXXX"
                 $error={!!errors.phone}
-                value={field.value}
-                onChange={field.onChange}
+                {...field}
               />
             )}
           />

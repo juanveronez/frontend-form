@@ -94,6 +94,7 @@ const CadastroEndereco = () => {
                 value: codePattern,
                 message: "Formato de CEP inválido",
               },
+              onBlur: () => fetchAddress(codeValue),
             }}
             render={({ field }) => (
               <InputMask
@@ -102,9 +103,7 @@ const CadastroEndereco = () => {
                 placeholder="Insira seu CEP"
                 type="text"
                 $error={!!errors.code}
-                value={field.value}
-                onChange={field.onChange}
-                onBlur={() => fetchAddress(codeValue)}
+                {...field}
               />
             )}
           />
