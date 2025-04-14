@@ -13,11 +13,20 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 const cadastroSchema = z.object({
-  nome: z.string().min(5, "O nome deve ter pelo menos cinco caracteres"),
-  email: z.string(),
-  telefone: z.string(),
-  senha: z.string(),
-  senhaVerificada: z.string(),
+  nome: z
+    .string()
+    .min(1, "Este campo é obrigatório")
+    .min(5, "O nome deve ter pelo menos cinco caracteres"),
+  email: z
+    .string()
+    .min(1, "Este campo é obrigatório")
+    .email("O e-mail não é válido"),
+  telefone: z.string().min(1, "Este campo é obrigatório"),
+  senha: z
+    .string()
+    .min(1, "Este campo é obrigatório")
+    .min(8, "A senha deve ter pelo menos oito caracteres"),
+  senhaVerificada: z.string().min(1, "Este campo é obrigatório"),
 });
 
 type FormInputTipos = z.infer<typeof cadastroSchema>;
