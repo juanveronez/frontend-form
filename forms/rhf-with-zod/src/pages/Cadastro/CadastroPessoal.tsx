@@ -10,22 +10,17 @@ import {
   ErrorMessage,
 } from "../../components";
 import { useForm, Controller } from "react-hook-form";
-
-interface FormInputTipos {
-  nome: string;
-  email: string;
-  telefone: string;
-  senha: string;
-  senhaVerificada: string;
-}
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const cadastroSchema = z.object({
-  nome: z.string(),
+  nome: z.string().min(5, "O nome deve ter pelo menos cinco caracteres"),
   email: z.string(),
   telefone: z.string(),
   senha: z.string(),
   senhaVerificada: z.string(),
 });
+
+type FormInputTipos = z.infer<typeof cadastroSchema>;
 
 const CadastroPessoal = () => {
   const {
@@ -34,6 +29,7 @@ const CadastroPessoal = () => {
     formState: { errors },
     control,
   } = useForm<FormInputTipos>({
+    resolver: zodResolver(cadastroSchema),
     mode: "all",
     defaultValues: {
       nome: "",
