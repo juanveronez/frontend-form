@@ -12,15 +12,31 @@ import {
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+function captalizeText(text: string) {
+  function captalizeWord(word: string) {
+    const initial = word[0].toUpperCase();
+    const rest = word.slice(1).toLowerCase();
+
+    return `${initial}${rest}`;
+  }
+
+  const words = text.split(" ").filter(Boolean);
+  const captalizedWords = words.map(captalizeWord);
+
+  return captalizedWords.join(" ");
+}
+
 const cadastroSchema = z.object({
   nome: z
     .string()
     .min(1, "Este campo é obrigatório")
-    .min(5, "O nome deve ter pelo menos cinco caracteres"),
+    .min(5, "O nome deve ter pelo menos cinco caracteres")
+    .transform(captalizeText),
   email: z
     .string()
     .min(1, "Este campo é obrigatório")
-    .email("O e-mail não é válido"),
+    .email("O e-mail não é válido")
+    .toLowerCase(),
   telefone: z.string().min(1, "Este campo é obrigatório"),
   senha: z
     .string()
