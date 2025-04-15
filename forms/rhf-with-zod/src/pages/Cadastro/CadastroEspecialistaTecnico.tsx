@@ -1,3 +1,4 @@
+import { useForm } from "react-hook-form";
 import {
   Button,
   ButtonContainer,
@@ -9,18 +10,40 @@ import {
   Label,
   Titulo,
 } from "../../components";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const especialistaTecnicoSchema = z.object({
+  crm: z.string().min(1, 'Este campo é obrigatório'),
+  especialidades: z.array(z.object({
+    especialidade: z.string().min(1, 'Este campo é obrigatório'),
+    anoConclusao: z.number().min(1, 'Este campo é obrigatório'),
+    instituicao: z.string().min(1, 'Este campo é obrigatório'),
+  }))
+})
+
+type FormEspecialistaTecnico = z.infer<typeof especialistaTecnicoSchema>
 
 const CadastroEspecialistaTecnico = () => {
+  const { register, handleSubmit } = useForm<FormEspecialistaTecnico>({
+    resolver: zodResolver(especialistaTecnicoSchema),
+  });
+
+  const handleValid = (data: FormEspecialistaTecnico) => {
+    console.log(data);
+  }
+
   return (
     <>
       <Titulo className="titulo">Agora, seus dados técnicos:</Titulo>
-      <Form>
+      <Form onSubmit={handleSubmit(handleValid)}>
         <Fieldset>
           <Label>CRM</Label>
           <Input
             id="campo-crm"
             type="text"
             placeholder="Insira seu número de registro"
+            {...register('crm')}
           />
         </Fieldset>
         <Divisor />
