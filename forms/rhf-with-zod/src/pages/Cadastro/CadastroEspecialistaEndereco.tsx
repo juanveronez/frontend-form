@@ -17,13 +17,14 @@ import {
 } from "../../components";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useCallback, useEffect } from "react";
 
 const especialistaEnderecoSchema = z.object({
   endereco: z.object({
     cep: z
       .string()
       .min(1, "Este campo é obrigatório")
-      .length(9, "Informe um CEP válido"),
+      .length(8, "Informe um CEP válido"),
     rua: z.string().min(1, "Este campo é obrigatório"),
     numero: z.coerce
       .number({
@@ -37,10 +38,36 @@ const especialistaEnderecoSchema = z.object({
 
 type FormEspecialistaEndereco = z.infer<typeof especialistaEnderecoSchema>;
 
+const validateCep = (cep: string) =>
+  especialistaEnderecoSchema.shape.endereco.shape.cep.safeParse(cep).success;
+
+async function fethEndereco(
+  cep: string,
+  callback: (data: {
+    logradouro: string;
+    localidade: string;
+    uf: string;
+    bairro: string;
+  }) => void
+) {
+  if (!cep) return;
+  const response = await fetch(`http://viacep.com.br/ws/${cep}/json/`);
+  const data = await response.json();
+
+  if (response.ok) {
+    callback(data);
+  } else {
+    throw new Error();
+  }
+}
+
 const CadastroEspecialistaEndereco = () => {
   const {
     register,
     handleSubmit,
+    watch,
+    setValue,
+    setError,
     formState: { errors },
   } = useForm<FormEspecialistaEndereco>({
     resolver: zodResolver(especialistaEnderecoSchema),
@@ -54,6 +81,33 @@ const CadastroEspecialistaEndereco = () => {
       },
     },
   });
+
+  const handleSetEndereco = useCallback(
+    async (cep: string) => {
+      if (!cep) return;
+      try {
+        fethEndereco(cep, (data) => {
+          setValue("endereco.rua", data.logradouro);
+          setValue("endereco.localidade", `${data.localidade}, ${data.uf}`);
+          setValue("endereco.bairro", data.bairro);
+        });
+      } catch (error) {
+        setError("endereco.cep", {
+          type: "manual",
+          message: "CEP inválido",
+        });
+      }
+    },
+    [setError, setValue]
+  );
+
+  const cep = watch("endereco.cep");
+
+  useEffect(() => {
+    if (validateCep(cep)) {
+      handleSetEndereco(cep);
+    }
+  }, [cep, handleSetEndereco]);
 
   const handleValid = (data: FormEspecialistaEndereco) => {
     console.log(data);
@@ -80,7 +134,9 @@ const CadastroEspecialistaEndereco = () => {
             placeholder="Insira seu CEP"
             type="text"
             $error={!!errors.endereco?.cep}
-            {...register("endereco.cep")}
+            {...register("endereco.cep", {
+              onBlur: () => handleSetEndereco(cep),
+            })}
           />
           {errors.endereco?.cep && (
             <ErrorMessage>{errors.endereco.cep.message}</ErrorMessage>
