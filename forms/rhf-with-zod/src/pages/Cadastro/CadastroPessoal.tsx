@@ -38,7 +38,7 @@ const cadastroSchema = z
       .min(1, "Este campo é obrigatório")
       .email("O e-mail não é válido")
       .toLowerCase(),
-    telefone: z.string().min(1, "Este campo é obrigatório"),
+    telefone: z.string().min(1, "Este campo é obrigatório").regex(/\(\d{2}\) \d{5}-\d{4}/, "O telefone não é válido"),
     senha: z
       .string()
       .min(1, "Este campo é obrigatório")
