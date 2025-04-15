@@ -1,3 +1,4 @@
+import { z } from "zod";
 import {
   Button,
   Divisor,
@@ -13,8 +14,40 @@ import {
   UploadLabel,
   UploadTitulo,
 } from "../../components";
+import { useForm } from "react-hook-form";
+
+const especialistaEnderecoSchema = z.object({
+  endereco: z.object({
+    cep: z
+      .string()
+      .min(1, "Este campo é obrigatório")
+      .min(9, "Informe um CEP válido"),
+    rua: z.string().min(1, "Este campo é obrigatório"),
+    numero: z.coerce
+      .number({
+        invalid_type_error: "Este campo é numérico",
+      })
+      .min(1, "Este campo é obrigatório"),
+    bairro: z.string().min(1, "Este campo é obrigatório"),
+    localidade: z.string().min(1, "Este campo é obrigatório"),
+  }),
+});
+
+type FormEspecialistaEndereco = z.infer<typeof especialistaEnderecoSchema>;
 
 const CadastroEspecialistaEndereco = () => {
+  useForm<FormEspecialistaEndereco>({
+    defaultValues: {
+      endereco: {
+        bairro: "",
+        cep: "",
+        localidade: "",
+        numero: 0,
+        rua: "",
+      },
+    },
+  });
+
   return (
     <>
       <Titulo className="titulo">Para finalizar, só alguns detalhes!</Titulo>
