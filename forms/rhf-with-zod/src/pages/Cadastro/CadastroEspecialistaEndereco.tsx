@@ -20,6 +20,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useEffect } from "react";
 
 const especialistaEnderecoSchema = z.object({
+  avatar: z
+    .instanceof(FileList)
+    .nullable()
+    .transform((list) => list?.item(0)),
   endereco: z.object({
     cep: z
       .string()
@@ -36,7 +40,8 @@ const especialistaEnderecoSchema = z.object({
   }),
 });
 
-type FormEspecialistaEndereco = z.infer<typeof especialistaEnderecoSchema>;
+type TFieldValues = z.input<typeof especialistaEnderecoSchema>;
+type TTransformedValues = z.output<typeof especialistaEnderecoSchema>;
 
 const validateCep = (cep: string) =>
   especialistaEnderecoSchema.shape.endereco.shape.cep.safeParse(cep).success;
@@ -69,9 +74,10 @@ const CadastroEspecialistaEndereco = () => {
     setValue,
     setError,
     formState: { errors },
-  } = useForm<FormEspecialistaEndereco>({
+  } = useForm<TFieldValues, unknown, TTransformedValues>({
     resolver: zodResolver(especialistaEnderecoSchema),
     defaultValues: {
+      avatar: null,
       endereco: {
         bairro: "",
         cep: "",
@@ -109,7 +115,7 @@ const CadastroEspecialistaEndereco = () => {
     }
   }, [cep, handleSetEndereco]);
 
-  const handleValid = (data: FormEspecialistaEndereco) => {
+  const handleValid = (data: TTransformedValues) => {
     console.log(data);
   };
 
@@ -122,7 +128,16 @@ const CadastroEspecialistaEndereco = () => {
           <UploadLabel htmlFor="campo-upload">
             <UploadIcon />
             <UploadDescription>Clique para enviar</UploadDescription>
-            <UploadInput accept="image/*" id="campo-upload" type="file" />
+            <UploadInput
+              accept="image/*"
+              id="campo-upload"
+              type="file"
+              multiple={false}
+              {...register("avatar")}
+            />
+            {errors.avatar && (
+              <ErrorMessage>{errors.avatar.message}</ErrorMessage>
+            )}
           </UploadLabel>
         </>
 
