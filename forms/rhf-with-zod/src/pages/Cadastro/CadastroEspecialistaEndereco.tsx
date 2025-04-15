@@ -19,14 +19,14 @@ const CadastroEspecialistaEndereco = () => {
     <>
       <Titulo className="titulo">Para finalizar, só alguns detalhes!</Titulo>
       <Form>
-        <div>
+        <>
           <UploadTitulo>Sua foto</UploadTitulo>
           <UploadLabel htmlFor="campo-upload">
             <UploadIcon />
             <UploadDescription>Clique para enviar</UploadDescription>
             <UploadInput accept="image/*" id="campo-upload" type="file" />
           </UploadLabel>
-        </div>
+        </>
 
         <Divisor />
         <Fieldset>
