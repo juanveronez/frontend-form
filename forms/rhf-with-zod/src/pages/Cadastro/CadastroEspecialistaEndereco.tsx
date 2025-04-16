@@ -1,4 +1,3 @@
-import { z } from "zod";
 import {
   Button,
   Divisor,
@@ -18,53 +17,13 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useEffect } from "react";
-
-const especialistaEnderecoSchema = z.object({
-  avatar: z
-    .instanceof(FileList)
-    .nullable()
-    .transform((list) => list?.item(0)),
-  endereco: z.object({
-    cep: z
-      .string()
-      .min(1, "Este campo é obrigatório")
-      .length(8, "Informe um CEP válido"),
-    rua: z.string().min(1, "Este campo é obrigatório"),
-    numero: z.coerce
-      .number({
-        invalid_type_error: "Este campo é numérico",
-      })
-      .min(1, "Este campo é obrigatório"),
-    bairro: z.string().min(1, "Este campo é obrigatório"),
-    localidade: z.string().min(1, "Este campo é obrigatório"),
-  }),
-});
-
-type TFieldValues = z.input<typeof especialistaEnderecoSchema>;
-type TTransformedValues = z.output<typeof especialistaEnderecoSchema>;
-
-const validateCep = (cep: string) =>
-  especialistaEnderecoSchema.shape.endereco.shape.cep.safeParse(cep).success;
-
-async function fethEndereco(
-  cep: string,
-  callback: (data: {
-    logradouro: string;
-    localidade: string;
-    uf: string;
-    bairro: string;
-  }) => void
-) {
-  if (!cep) return;
-  const response = await fetch(`http://viacep.com.br/ws/${cep}/json/`);
-  const data = await response.json();
-
-  if (response.ok) {
-    callback(data);
-  } else {
-    throw new Error();
-  }
-}
+import { especialistaEnderecoSchema } from "../../schemas/especialistaEnderecoSchema";
+import { fethEndereco } from "../../utils/fethEndereco";
+import { validateCep } from "../../utils/validateCep";
+import {
+  EspecialistaEnderecoFieldValues,
+  EspecialistaEnderecoTransformedValues,
+} from "../../@types/forms";
 
 const CadastroEspecialistaEndereco = () => {
   const {
@@ -74,10 +33,14 @@ const CadastroEspecialistaEndereco = () => {
     setValue,
     setError,
     formState: { errors },
-  } = useForm<TFieldValues, unknown, TTransformedValues>({
+  } = useForm<
+    EspecialistaEnderecoFieldValues,
+    unknown,
+    EspecialistaEnderecoTransformedValues
+  >({
     resolver: zodResolver(especialistaEnderecoSchema),
     defaultValues: {
-      avatar: null,
+      avatar: undefined,
       endereco: {
         bairro: "",
         cep: "",
@@ -115,7 +78,7 @@ const CadastroEspecialistaEndereco = () => {
     }
   }, [cep, handleSetEndereco]);
 
-  const handleValid = (data: TTransformedValues) => {
+  const handleValid = (data: EspecialistaEnderecoTransformedValues) => {
     console.log(data);
   };
 
@@ -135,10 +98,10 @@ const CadastroEspecialistaEndereco = () => {
               multiple={false}
               {...register("avatar")}
             />
-            {errors.avatar && (
-              <ErrorMessage>{errors.avatar.message}</ErrorMessage>
-            )}
           </UploadLabel>
+          {errors.avatar && (
+            <ErrorMessage>{errors.avatar.message}</ErrorMessage>
+          )}
         </>
 
         <Divisor />

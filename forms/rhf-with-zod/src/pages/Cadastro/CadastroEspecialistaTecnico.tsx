@@ -11,26 +11,10 @@ import {
   Label,
   Titulo,
 } from "../../components";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Fragment } from "react";
-
-const especialistaTecnicoSchema = z.object({
-  crm: z.string().min(1, "Este campo é obrigatório"),
-  especialidades: z.array(
-    z.object({
-      especialidade: z.string().min(1, "Este campo é obrigatório"),
-      anoConclusao: z.coerce
-        .number({
-          invalid_type_error: "Este campo é numérico",
-        })
-        .min(1, "Este campo é obrigatório"),
-      instituicao: z.string().min(1, "Este campo é obrigatório"),
-    })
-  ),
-});
-
-type FormEspecialistaTecnico = z.infer<typeof especialistaTecnicoSchema>;
+import { especialistaTecnicoSchema } from "../../schemas/especialistaTecnicoSchema";
+import { FormEspecialistaTecnico } from "../../@types/forms";
 
 const CadastroEspecialistaTecnico = () => {
   const {
