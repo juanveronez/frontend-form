@@ -104,15 +104,12 @@ const CartPage = ({ cartItems, removeFromCart }: CartPageProps) => {
             </Typography>
           </div>
           <div className={Styles.cartActions}>
-            <Button
-              onClick={handleRedirect}
-              variant="secondary"
-              text="Continuar comprando"
-            />
-            <Button
-              onClick={() => console.log("pagamento")}
-              text="Ir para pagamento"
-            />
+            <Button onClick={handleRedirect} variant="secondary">
+              Continuar comprando
+            </Button>
+            <Button onClick={() => console.log("pagamento")}>
+              Ir para pagamento
+            </Button>
           </div>
         </div>
       </section>
