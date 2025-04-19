@@ -1,12 +1,12 @@
 import { FC } from "react";
 import { ShoppingBagIcon } from "../../common/icons/ShoppingBagIcon";
-import Button from "../Button";
 import Divider from "../Divider";
 import Field from "../Field";
 import Typography from "../Typography";
+import CartActions from "../CartActions";
+import { Product } from "../../common/types/product";
 
 import Styles from "./CartSummary.module.css";
-import { Product } from "../../common/types/product";
 
 interface CartSummaryProps {
   cartItems: Product[];
@@ -54,12 +54,7 @@ const CartSummary: FC<CartSummaryProps> = ({
           R$ {total + freight}
         </Typography>
       </div>
-      <div className={Styles.cartActions}>
-        <Button onClick={onRedirect} variant="secondary">
-          Continuar comprando
-        </Button>
-        <Button onClick={onPayment}>Ir para pagamento</Button>
-      </div>
+      <CartActions onPayment={onPayment} onRedirect={onRedirect} />
     </div>
   );
 };
