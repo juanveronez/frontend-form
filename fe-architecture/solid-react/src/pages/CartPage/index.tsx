@@ -3,6 +3,7 @@ import Button from "../../components/Button";
 import Divider from "../../components/Divider";
 import Field from "../../components/Field";
 import Typography from "../../components/Typography";
+import CartItem from "../../components/CartItem";
 import Styles from "./CartPage.module.css";
 import { useNavigate } from "react-router-dom";
 
@@ -39,33 +40,7 @@ const CartPage = ({ cartItems, removeFromCart }: CartPageProps) => {
           </Typography>
           {cartItems?.length > 0 ? (
             cartItems.map((item) => (
-              <div key={item.id} className={Styles.cartItem}>
-                <div className={Styles.cartImageContainer}>
-                  <img src={item.imageSrc} alt={item.label} />
-                </div>
-                <div className={Styles.itemDetails}>
-                  <div className={Styles.itemDescription}>
-                    <Typography variantStyle="h6-small">
-                      {item.label}
-                    </Typography>
-                    <Typography variantStyle="body">
-                      {item.description}
-                    </Typography>
-                  </div>
-                  <Typography variantStyle="body-semi-bold">
-                    R$ {item.price}
-                  </Typography>
-                  <Typography variantStyle="body-small-bold">
-                    Quantidade: 1
-                  </Typography>
-                  <Typography variantStyle="body-small-bold">
-                    Tamanho: único
-                  </Typography>
-                  <Button onClick={() => removeFromCart(item.id)}>
-                    Excluir
-                  </Button>
-                </div>
-              </div>
+              <CartItem key={item.id} item={item} onRemove={removeFromCart} />
             ))
           ) : (
             <div style={{ marginTop: "15px" }}>

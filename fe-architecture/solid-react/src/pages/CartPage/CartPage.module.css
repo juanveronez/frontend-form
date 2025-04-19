@@ -9,32 +9,10 @@
   margin-bottom: 80px;
 }
 
-.cartImageContainer {
-  max-width: 170px;
-}
-
-.cartImageContainer img {
-  width: 170px;
-}
-
 .cartItems {
   width: 70%;
   padding: 32px;
   background-color: var(--cinza-claro);
-}
-
-.cartItem {
-  display: flex;
-  margin: 32px 0;
-  padding: 18px 0;
-}
-
-.itemDetails {
-  display: flex;
-  margin-left: 20px;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
 }
 
 .cartSummary {
