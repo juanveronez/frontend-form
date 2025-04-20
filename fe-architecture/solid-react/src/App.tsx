@@ -24,7 +24,11 @@ function App({ cartItems, cartCount, addToCart, removeFromCart }: CartProps) {
           <Route
             path="/carrinho"
             element={
-              <CartPage cartItems={cartItems} removeFromCart={removeFromCart} />
+              <CartPage
+                cartItems={cartItems}
+                cartCount={cartCount}
+                removeFromCart={removeFromCart}
+              />
             }
           />
         </>

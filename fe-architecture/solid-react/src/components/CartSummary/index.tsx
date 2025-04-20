@@ -4,12 +4,11 @@ import Divider from "../Divider";
 import Field from "../Field";
 import Typography from "../Typography";
 import CartActions from "../CartActions";
-import { Product } from "../../common/types/product";
 
 import Styles from "./CartSummary.module.css";
 
 interface CartSummaryProps {
-  cartItems: Product[];
+  cartCount: number;
   total: number;
   freight: number;
   onPayment: () => void;
@@ -17,7 +16,7 @@ interface CartSummaryProps {
 }
 
 const CartSummary: FC<CartSummaryProps> = ({
-  cartItems,
+  cartCount,
   freight,
   total,
   onPayment,
@@ -38,7 +37,7 @@ const CartSummary: FC<CartSummaryProps> = ({
       </div>
       <div className={Styles.summaryResume}>
         <Typography variantStyle="body-small-bold">
-          {cartItems.length} Produtos
+          {cartCount} {cartCount > 1 ? "Produtos" : "Produto"}
         </Typography>
         <Typography variantStyle="body-small-bold">R$ {total}</Typography>
         <Typography variantStyle="body-small-bold">Frete:</Typography>
