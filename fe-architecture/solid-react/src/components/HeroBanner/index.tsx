@@ -1,7 +1,7 @@
-import { ReactNode } from "react";
+import { ReactNode, useMemo } from "react";
 import styles from "./HeroBanner.module.css";
 
-type HeroBannerProps = {
+export type HeroBannerProps = {
   backgroundImage?: string;
   mainImage?: string;
   children?: ReactNode;
@@ -12,22 +12,27 @@ const HeroBanner = ({
   mainImage,
   children,
 }: HeroBannerProps) => {
+  const backgroundStyle = useMemo(
+    () =>
+      backgroundImage ? { backgroundImage: `url(${backgroundImage})` } : {},
+    [backgroundImage]
+  );
+
   return (
     <section className={styles.heroBanner}>
-      <div
-        className={styles.gridOverlay}
-        style={{ backgroundImage: `url(${backgroundImage})` }}
-      ></div>
+      <div className={styles.gridOverlay} style={backgroundStyle}></div>
       <div className={styles.heroContent}>
-        <div className={styles.mainImageWrapper}>
-          <img
-            src={mainImage}
-            alt="Hora de abraças seu lado geek!"
-            className={styles.mainImage}
-          />
-        </div>
+        {mainImage && (
+          <div className={styles.mainImageWrapper}>
+            <img
+              src={mainImage}
+              alt="Hora de abraças seu lado geek!"
+              className={styles.mainImage}
+            />
+          </div>
+        )}
 
-        <div className={styles.textContent}>{children}</div>
+        {children && <div className={styles.textContent}>{children}</div>}
       </div>
     </section>
   );
