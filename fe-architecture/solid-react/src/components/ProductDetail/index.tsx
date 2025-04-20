@@ -3,8 +3,8 @@ import RadioButton from "../RadioButton";
 import Typography from "../Typography";
 import Styles from "./ProductDetail.module.css";
 import { AddCarrinhoIcon } from "../../common/icons/AddCarrinhoIcon";
-import Button from "../Button";
 import { Product } from "../../common/types/product";
+import IconButton from "../IconButton";
 
 type ProductDetailProps = {
   id: number;
@@ -70,10 +70,10 @@ function ProductDetail({
         </div>
 
         <div className={Styles.action}>
-          <Button onClick={handleAddToCart}>
+          <IconButton onClick={handleAddToCart}>
             <AddCarrinhoIcon />
             Adicionar ao carrinho
-          </Button>
+          </IconButton>
         </div>
       </div>
     </section>
