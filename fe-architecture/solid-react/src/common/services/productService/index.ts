@@ -3,7 +3,7 @@ import { IHttp } from "../../interfaces/http.interface";
 import { IproductService } from "../../interfaces/productService.interface";
 import { Product } from "../../types/product";
 
-const productService = (http: IHttp): IproductService => ({
+const ProductService = (http: IHttp): IproductService => ({
   fetchProducts: async () => {
     try {
       const productsData = await http.get<{ products: Product[] }>(
@@ -16,4 +16,4 @@ const productService = (http: IHttp): IproductService => ({
   },
 });
 
-export default productService;
+export default ProductService;
