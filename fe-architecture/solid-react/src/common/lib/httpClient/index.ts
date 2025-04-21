@@ -1,4 +1,4 @@
-import { IHttp } from "./http.interface";
+import { IHttp } from "../../interfaces/http.interface";
 import axios from "axios";
 
 const Http = (): IHttp => ({
