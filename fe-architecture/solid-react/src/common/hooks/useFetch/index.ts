@@ -1,5 +1,5 @@
-import axios, { AxiosResponse } from "axios";
 import { useEffect, useState } from "react";
+import Http from "../../lib/httpClient";
 
 type FetchResult<T> = {
   data: T | null;
@@ -13,9 +13,9 @@ const useFetch = <T>(url: string): FetchResult<T> => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    axios
-      .get(url)
-      .then(({ data }: AxiosResponse<T>) => setData(data))
+    Http()
+      .get<T>(url)
+      .then(setData)
       .catch(() => setError("Erro ao carregar dados!"))
       .finally(() => setIsLoading(false));
   }, [url]);
