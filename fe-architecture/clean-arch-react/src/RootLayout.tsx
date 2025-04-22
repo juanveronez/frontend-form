@@ -3,6 +3,7 @@ import { Header } from "./components/Header";
 import { Outlet } from "react-router";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/ReactToastify.css";
+import { AuthProvider } from "./app/contexts/AuthContext";
 
 const Container = styled.div`
   display: flex;
@@ -13,13 +14,13 @@ const Container = styled.div`
 
 const RootLayout = () => {
   return (
-    <>
+    <AuthProvider>
       <ToastContainer />
       <Header />
       <Container>
         <Outlet />
       </Container>
-    </>
+    </AuthProvider>
   );
 };
 
