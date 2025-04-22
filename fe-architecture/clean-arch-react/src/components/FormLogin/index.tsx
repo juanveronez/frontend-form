@@ -6,11 +6,13 @@ import { FormLabel } from "../FormLabel";
 import { TextField } from "../TextField";
 import { useAuthContext } from "../../app/hooks/useAuthContext";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router";
 
 export const FormLogin = () => {
   const [credentials, setCredentials] = useState({ email: "", password: "" });
 
   const { login } = useAuthContext();
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -27,8 +29,9 @@ export const FormLogin = () => {
     try {
       await login(email, password);
       toast.success("Que bom te ter de volta ao Anybank!");
-      setCredentials({ email: "", password: "" });
+      navigate("/");
     } catch (error) {
+      toast.error("Falha ao realizar login, credenciais inválidas");
       console.error("login", error);
     }
   };
