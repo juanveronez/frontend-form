@@ -1,12 +1,5 @@
-import { FormLogin } from "./components/FormLogin"
+import { FormLogin } from "./components/FormLogin";
 
-const Login = () => {
+const Login = () => <FormLogin />;
 
-  return (
-    <>
-      <FormLogin onLogin={() => console.log('login')} />
-    </>
-  )
-}
-
-export default Login
+export default Login;
