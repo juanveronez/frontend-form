@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { Button } from "../Button";
-import { Fieldset } from "../Fieldset";
-import { Figure, Form, FormActions, Heading, Image } from "../Form";
-import { FormLabel } from "../FormLabel";
-import { TextField } from "../TextField";
+import { Button } from "../../components/Button";
+import { Fieldset } from "../../components/Fieldset";
+import { Figure, Form, FormActions, Heading, Image } from "../../components/Form";
+import { FormLabel } from "../../components/FormLabel";
+import { TextField } from "../../components/TextField";
 import { useAuthContext } from "../../app/hooks/useAuthContext";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router";
 
-export const FormLogin = () => {
+const Login = () => {
   const [credentials, setCredentials] = useState({ email: "", password: "" });
 
   const { login } = useAuthContext();
@@ -75,3 +75,5 @@ export const FormLogin = () => {
     </>
   );
 };
+
+export default Login;
