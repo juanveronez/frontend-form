@@ -1,6 +1,8 @@
-import { Outlet } from "react-router";
+import { Outlet, useNavigate } from "react-router";
 import { Card as BaseCard } from "../components/Card";
 import styled from "styled-components";
+import { useAuthContext } from "../app/hooks/useAuthContext";
+import { useEffect } from "react";
 
 const Card = styled(BaseCard)`
   display: flex;
@@ -9,12 +11,20 @@ const Card = styled(BaseCard)`
 `;
 
 const AuthLayout = () => {
+  const { session } = useAuthContext();
+  const navigate = useNavigate();
 
-    return (
-        <Card>
-            <Outlet />
-        </Card>
-    )
-}
+  useEffect(() => {
+    if (session) {
+      navigate("/");
+    }
+  }, [session, navigate]);
 
-export default AuthLayout
+  return (
+    <Card>
+      <Outlet />
+    </Card>
+  );
+};
+
+export default AuthLayout;
