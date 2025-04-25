@@ -1,9 +1,9 @@
 import { toast } from "react-toastify";
 import { useAuthContext } from "../../app/hooks/useAuthContext";
-import { IconAvatar } from "../Icons";
-import { TransparentButton } from "../TransparentButton";
 import { List, ListItem } from "./styles";
 import { useNavigate } from "react-router";
+import { IconAvatar } from "../../components/Icons";
+import { TransparentButton } from "../../components/TransparentButton";
 
 export const AuthenticatedActionList = () => {
   const { logout } = useAuthContext();

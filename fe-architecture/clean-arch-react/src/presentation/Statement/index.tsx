@@ -6,11 +6,11 @@ const groupTransactions = (transactions: ITransaction[]): Record<string, ITransa
       const monthName = transaction.date.toLocaleString('pt-BR', { month: 'long' });
       const year = transaction.date.getFullYear();
       const key = `${monthName} ${year}`;
-      
+
       if (!acc[key]) {
         acc[key] = [];
       }
-      
+
       acc[key].push(transaction);
       return acc;
     }, {});
@@ -22,7 +22,7 @@ interface StatementProps {
 
 export const Statement = ({ allTransactions }: StatementProps) => {
     const grouped = groupTransactions(allTransactions);
-    
+
     return (
         <Container>
             <Heading>
