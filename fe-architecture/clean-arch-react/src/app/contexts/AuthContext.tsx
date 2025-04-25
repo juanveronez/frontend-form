@@ -11,13 +11,14 @@ interface IAuthContext {
 export const AuthContext = createContext<IAuthContext | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<Session | null>(null);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      console.log("getSession", session);
-      setSession(session);
-    });
+    supabase.auth
+      .getSession()
+      .then(({ data: { session } }) => setSession(session))
+      .finally(() => setLoading(false));
 
     const {
       data: { subscription },
@@ -42,7 +43,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider value={{ session, logout, login }}>
-      {children}
+      {loading ? "carregando..." : children}
     </AuthContext.Provider>
   );
 };
