@@ -1,45 +1,30 @@
-import styled from "styled-components"
-import { Sidebar } from "../presentation/Sidebar"
-import { Account } from "../presentation/Account"
-import { Statement } from "../presentation/Statement"
-import { TransactionForm } from "../presentation/TransactionForm"
+import styled from "styled-components";
+import { Sidebar } from "../presentation/Sidebar";
+import { Account } from "../presentation/Account";
+import { Statement } from "../presentation/Statement";
+import { TransactionForm } from "../presentation/TransactionForm";
+import { ITransaction } from "../domain/entities/ITransaction";
+import { useEffect, useState } from "react";
+import { ListAllTransactions } from "../domain/useCases/ListAllTransactions";
+import { TransactionSupabaseRepository } from "../infra/supabase/TransactionSupabaseRepository";
 
 const Main = styled.main`
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 34px;
-`
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 34px;
+`;
 
-const transactions = [
-  {
-    id: 1,
-    value: 150,
-    type: 'Depósito',
-    date: new Date(2022, 9, 18)
-  },
-  {
-    id: 2,
-    value: 200,
-    type: 'Saque',
-    date: new Date(2022, 8, 19)
-  },
-  {
-    id: 3,
-    value: 300,
-    type: 'Transferência',
-    date: new Date(2022, 8, 20)
-  },
-  {
-    id: 4,
-    value: 500,
-    type: 'Depósito',
-    date: new Date(2022, 7, 21)
-  }
-];
-
+const listAllTransactions = new ListAllTransactions(
+  new TransactionSupabaseRepository()
+);
 
 const Home = () => {
+  const [transactions, setTransactions] = useState<ITransaction[]>([]);
+
+  useEffect(() => {
+    listAllTransactions.execute().then(setTransactions);
+  }, []);
 
   return (
     <>
@@ -48,11 +33,13 @@ const Home = () => {
         <Account />
         <TransactionForm />
       </Main>
-      <div>
-        <Statement allTransactions={transactions} />
-      </div>
+      {!!transactions.length && (
+        <div>
+          <Statement allTransactions={transactions} />
+        </div>
+      )}
     </>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
