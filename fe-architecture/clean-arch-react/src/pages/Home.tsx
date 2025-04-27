@@ -15,6 +15,8 @@ const Main = styled.main`
   gap: 34px;
 `;
 
+const INCOME_ID = 1;
+
 const listAllTransactions = new ListAllTransactions(
   new TransactionSupabaseRepository()
 );
@@ -26,11 +28,15 @@ const Home = () => {
     listAllTransactions.execute().then(setTransactions);
   }, []);
 
+  const balance = transactions.reduce((acc, { type, value }) => {
+    return acc + (type.id === INCOME_ID ? 1 : -1) * value;
+  }, 0);
+
   return (
     <>
       <Sidebar />
       <Main>
-        <Account />
+        <Account balance={balance} />
         <TransactionForm />
       </Main>
       {!!transactions.length && (
