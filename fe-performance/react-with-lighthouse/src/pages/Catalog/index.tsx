@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Header from "../../components/Header";
 import PageContent from "../../components/PageContent";
 import PageSection from "../../components/PageSection";
-import React, { Profiler, useEffect } from "react";
+import React, { Profiler, ProfilerOnRenderCallback, useEffect } from "react";
 import { fetchBooks, filterItems } from "../../store/reducers/books";
 import { AppDispatch, RootState } from "../../store/store";
 import { Footer } from "../../components/Footer";
@@ -26,8 +26,28 @@ const Catalog: React.FC = () => {
     dispatch(filterItems(e.target.value));
   };
 
+  const handleRender: ProfilerOnRenderCallback = (
+    id,
+    phase,
+    actualDuration,
+    baseDuration,
+    startTime,
+    commitTime,
+    interactions
+  ) => {
+    console.log({
+      id,
+      phase,
+      actualDuration,
+      baseDuration,
+      startTime,
+      commitTime,
+      interactions,
+    });
+  };
+
   return (
-    <Profiler id="Catalog" onRender={console.log}>
+    <Profiler id="Catalog" onRender={handleRender}>
       <React.Fragment>
         {!isLoading && (
           <React.Fragment>
