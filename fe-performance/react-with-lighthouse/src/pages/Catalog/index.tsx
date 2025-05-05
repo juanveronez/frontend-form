@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Header from "../../components/Header";
 import PageContent from "../../components/PageContent";
 import PageSection from "../../components/PageSection";
+import Footer from "../../components/Footer";
 import React, {
   lazy,
   Profiler,
@@ -12,7 +13,6 @@ import React, {
 } from "react";
 import { fetchBooks, filterItems } from "../../store/reducers/books";
 import { AppDispatch, RootState } from "../../store/store";
-import { Footer } from "../../components/Footer";
 import { resolvePromise } from "../../utils";
 
 const BooksList = lazy(() =>

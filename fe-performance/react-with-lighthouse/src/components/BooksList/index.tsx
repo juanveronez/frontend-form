@@ -7,7 +7,7 @@ type BookList = { books: Book[] };
 const BooksList: FC<BookList> = ({ books }) => (
   <>
     {books.map((book) => (
-      <BookItem book={book} />
+      <BookItem book={book} key={book.id} />
     ))}
   </>
 );
