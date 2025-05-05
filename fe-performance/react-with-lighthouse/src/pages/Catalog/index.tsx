@@ -2,15 +2,26 @@ import { useDispatch, useSelector } from "react-redux";
 import Header from "../../components/Header";
 import PageContent from "../../components/PageContent";
 import PageSection from "../../components/PageSection";
-import React, { Profiler, ProfilerOnRenderCallback, useEffect } from "react";
+import React, {
+  lazy,
+  Profiler,
+  ProfilerOnRenderCallback,
+  Suspense,
+  useEffect,
+} from "react";
 import { fetchBooks, filterItems } from "../../store/reducers/books";
 import { AppDispatch, RootState } from "../../store/store";
 import { Footer } from "../../components/Footer";
+import { resolvePromise } from "../../utils";
+
+const BooksList = lazy(() =>
+  resolvePromise(import("../../components/BooksList"))
+);
 
 const Catalog: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const [filterInput, setFilterInput] = React.useState("");
-  const { books, filteredBooks, isLoading } = useSelector(
+  const { books, filteredBooks } = useSelector(
     (state: RootState) => state.books
   );
 
@@ -83,25 +94,13 @@ const Catalog: React.FC = () => {
               </div>
             ) : (
               <PageContent>
-                {isLoading ? (
-                  <img src="/loading.gif" alt="carregando...." />
-                ) : (
+                <Suspense
+                  fallback={<img src="/loading.gif" alt="carregando...." />}
+                >
                   <div className="flex flex-wrap justify-center container items-start">
-                    {showingItems.map((book) => (
-                      <div className="flex flex-col items-start justify-center w-[246px] m-4">
-                        <img src={book.image} alt={book.title} />
-                        <div className="flex flex-col">
-                          <h3 className="text-lg text-[#002F52] font-bold text-left my-2">
-                            {book.title}
-                          </h3>
-                          <p className="text-sm text-[#221F20]">
-                            Por: {book.author}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
+                    <BooksList books={showingItems} />
                   </div>
-                )}
+                </Suspense>
               </PageContent>
             )}
             <Footer />
