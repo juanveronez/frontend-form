@@ -8,6 +8,7 @@ import React, {
   ProfilerOnRenderCallback,
   Suspense,
   useEffect,
+  useMemo,
 } from "react";
 import { fetchBooks, filterItems } from "../../store/reducers/books";
 import { AppDispatch, RootState } from "../../store/store";
@@ -23,6 +24,15 @@ const Catalog: React.FC = () => {
   const [filterInput, setFilterInput] = React.useState("");
   const { books, filteredBooks } = useSelector(
     (state: RootState) => state.books
+  );
+
+  const CatalogHeader = useMemo(
+    () => (
+      <Header>
+        <img alt="ByteBooks Logo" src="./logo.png" height={70} />
+      </Header>
+    ),
+    []
   );
 
   const showingItems =
@@ -61,9 +71,7 @@ const Catalog: React.FC = () => {
     <Profiler id="Catalog" onRender={handleRender}>
       <React.Fragment>
         <React.Fragment>
-          <Header>
-            <img alt="ByteBooks Logo" src="./logo.png" height={70} />
-          </Header>
+          {CatalogHeader}
           <PageSection>
             <h2 className="text-4xl text-white font-bold">
               Já sabe por onde começar?
