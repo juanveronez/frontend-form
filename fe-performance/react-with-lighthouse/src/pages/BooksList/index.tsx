@@ -31,7 +31,7 @@ const BooksList: React.FC = () => {
       {!isLoading && (
         <React.Fragment>
           <Header>
-            <img alt="ByteBooks Logo" src="./logo.png" height={70} />
+            <img alt="ByteBooks Logo" src="./logo.webp" height={70} loading='lazy' />
           </Header>
           <PageSection>
             <h2 className="text-4xl text-white font-bold">
@@ -59,7 +59,7 @@ const BooksList: React.FC = () => {
                 <div className="flex flex-wrap justify-center container items-start">
                   {showingItems.map((book) => (
                     <div className="flex flex-col items-start justify-center w-[246px] m-4">
-                      <img src={book.image} alt={book.title} />
+                      <img src={book.image} alt={book.title} loading="lazy" />
                       <div className="flex flex-col">
                         <h3 className="text-lg text-[#002F52] font-bold text-left my-2">
                           {book.title}

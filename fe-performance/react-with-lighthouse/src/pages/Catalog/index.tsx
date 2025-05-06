@@ -29,7 +29,7 @@ const Catalog: React.FC = () => {
   const CatalogHeader = useMemo(
     () => (
       <Header>
-        <img alt="ByteBooks Logo" src="./logo.png" height={70} />
+        <img alt="ByteBooks Logo" src="./logo.webp" height={70} loading="lazy" />
       </Header>
     ),
     []
@@ -95,15 +95,16 @@ const Catalog: React.FC = () => {
                   Oops! Não encontramos nenhum resultado.
                 </h2>
                 <img
-                  src="/not_found.png"
+                  src="/not_found.webp"
                   alt="sem resultado"
                   className="w-1/2 max-w-[500px] mx-auto mt-4"
+                  loading="lazy"
                 />
               </div>
             ) : (
               <PageContent>
                 <Suspense
-                  fallback={<img src="/loading.gif" alt="carregando...." />}
+                  fallback={<img src="/loading.gif" alt="carregando...." loading="lazy" />}
                 >
                   <div className="flex flex-wrap justify-center container items-start">
                     <BooksList books={showingItems} />
